@@ -1,0 +1,9 @@
+{
+  "name": "notify-order",
+  "version": "1.0.0",
+  "description": "Cloud Function para notificar processamento do pedido",
+  "main": "notify-index.js",
+  "engines": {
+    "node": "20.x"
+  }
+}

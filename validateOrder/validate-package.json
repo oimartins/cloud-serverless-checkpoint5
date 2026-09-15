@@ -1,0 +1,9 @@
+{
+  "name": "validate-order",
+  "version": "1.0.0",
+  "description": "Cloud Function para validar pedidos",
+  "main": "validate-index.js",
+  "engines": {
+    "node": "20.x"
+  }
+}

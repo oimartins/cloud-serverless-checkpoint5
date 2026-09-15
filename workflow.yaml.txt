@@ -1,0 +1,59 @@
+main:
+  params: [input]
+
+  steps:
+
+    - processOrder:
+        try:
+          steps:
+
+            - validateOrder:
+                call: http.post
+                args:
+                  url: https://URL_DA_FUNCAO_VALIDATEORDER
+                  body:
+                    id: ${input.orderId}
+                result: validationResponse
+
+            - publishOrder:
+                call: googleapis.pubsub.v1.projects.topics.publish
+                args:
+                  topic: projects/PROJECT_ID/topics/orders
+                  body:
+                    messages:
+                      - data: ${base64.encode(text.encode(json.encode_to_string({
+                            "orderId": input.orderId
+                          })))}
+                result: publishResult
+
+            - notifyOrder:
+                call: http.post
+                args:
+                  url: https://URL_DA_FUNCAO_NOTIFYORDER
+                  body:
+                    orderId: ${input.orderId}
+                result: notifyResponse
+
+        except:
+
+          as: error
+
+          steps:
+
+            - publishDLQ:
+                call: googleapis.pubsub.v1.projects.topics.publish
+                args:
+                  topic: projects/PROJECT_ID/topics/orders-dlq
+                  body:
+                    messages:
+                      - data: ${base64.encode(text.encode(json.encode_to_string(error)))}
+
+            - failure:
+                return:
+                  status: FAILED
+                  error: ${error}
+
+    - success:
+        return:
+          status: SUCCESS
+          orderId: ${input.orderId}
