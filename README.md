@@ -332,7 +332,7 @@ GCP_CREDENTIALS
 
 ---
 
-# 18. Verificar Execução Automática
+# 13. Verificar Execução Automática
 
 Acesse:
 
@@ -370,7 +370,7 @@ Execução esperada:
 
 ---
 
-# 19. Testar Pipeline Novamente
+# 14. Testar Pipeline Novamente
 
 Alterar qualquer arquivo.
 
