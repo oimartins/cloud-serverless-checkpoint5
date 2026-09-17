@@ -279,73 +279,7 @@ Copie todo o conteúdo do JSON.
 
 ---
 
-# 10. Criar Repositório no GitHub
-
-Criar um novo repositório:
-
-```text
-cloud-serverless-checkpoint5
-```
-
-Inicializar repositório local:
-
-```bash
-git init
-```
-
-Adicionar arquivos:
-
-```bash
-git add .
-```
-
-Primeiro commit:
-
-```bash
-git commit -m "Initial commit"
-```
-
-Definir branch principal:
-
-```bash
-git branch -M main
-```
-
-Adicionar origem:
-
-```bash
-git remote add origin https://github.com/SEU_USUARIO/cloud-serverless-checkpoint5.git
-```
-
-Enviar:
-
-```bash
-git push -u origin main
-```
-
----
-
-# 11. Criar Secrets no GitHub
-
-Acesse:
-
-```text
-GitHub
-→ Repository
-→ Settings
-→ Secrets and variables
-→ Actions
-```
-
-Clique em:
-
-```text
-New repository secret
-```
-
----
-
-# 12. Criar Secret GCP_PROJECT_ID
+#10. Criar Secret GCP_PROJECT_ID
 
 Nome:
 
@@ -363,7 +297,7 @@ Salvar.
 
 ---
 
-# 13. Criar Secret GCP_CREDENTIALS
+# 11. Criar Secret GCP_CREDENTIALS
 
 Nome:
 
@@ -386,7 +320,7 @@ Salvar.
 
 ---
 
-# 14. Verificar Secrets
+# 12. Verificar Secrets
 
 Deve existir:
 
@@ -394,125 +328,6 @@ Deve existir:
 GCP_PROJECT_ID
 
 GCP_CREDENTIALS
-```
-
----
-
-# 15. Criar Estrutura do Pipeline
-
-Criar diretórios:
-
-```bash
-mkdir -p .github/workflows
-```
-
-Criar arquivo:
-
-```bash
-touch .github/workflows/deploy.yml
-```
-
-Estrutura final:
-
-```text
-.github/
-└── workflows/
-    └── deploy.yml
-```
-
----
-
-# 16. Criar Pipeline GitHub Actions
-
-Arquivo:
-
-```text
-.github/workflows/deploy.yml
-```
-
-Conteúdo:
-
-```yaml
-name: Deploy Cloud Functions
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy:
-
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
-      id-token: write
-
-    steps:
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Authenticate GCP
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-
-      - name: Setup Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Set Project
-        run: |
-          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-
-      - name: Deploy validateOrder
-        run: |
-          cd validateOrder
-
-          gcloud functions deploy validateOrder \
-            --gen2 \
-            --runtime=nodejs20 \
-            --region=us-central1 \
-            --source=. \
-            --entry-point=validateOrder \
-            --trigger-http \
-            --allow-unauthenticated
-
-      - name: Deploy notifyOrder
-        run: |
-          cd notifyOrder
-
-          gcloud functions deploy notifyOrder \
-            --gen2 \
-            --runtime=nodejs20 \
-            --region=us-central1 \
-            --source=. \
-            --entry-point=notifyOrder \
-            --trigger-http \
-            --allow-unauthenticated
-
-      - name: Deploy Workflow
-        run: |
-          gcloud workflows deploy order-workflow \
-            --location=us-central1 \
-            --source=workflow.yaml
-```
-
----
-
-# 17. Fazer Commit do Pipeline
-
-```bash
-git add .
-```
-
-```bash
-git commit -m "Adicionando CI/CD"
-```
-
-```bash
-git push origin main
 ```
 
 ---
@@ -580,31 +395,6 @@ git push origin main
 ```
 
 O pipeline será executado automaticamente.
-
----
-
-# Evidência para Entrega
-
-Capturar print da tela:
-
-```text
-GitHub
-→ Actions
-→ Deploy Cloud Functions
-→ Execução Concluída
-```
-
-A imagem deve mostrar:
-
-```text
-✔ Deploy validateOrder
-
-✔ Deploy notifyOrder
-
-✔ Deploy Workflow
-
-✔ Workflow completed successfully
-```
 
 ---
 
